@@ -53,12 +53,21 @@ const Overview: React.FC<OverviewProps> = ({
     : '0';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-2xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
-        <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-          <h2 className="text-lg font-bold text-slate-800">Analytics</h2>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="analytics-modal-title"
+    >
+      <div className="bg-white rounded-2xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col shadow-2xl border border-stone-200">
+        <div className="p-4 border-b border-stone-200 flex justify-between items-center bg-[#FDFBF7]">
+          <h2 id="analytics-modal-title" className="text-lg font-bold text-stone-800">Analytics</h2>
+          <button 
+            onClick={onClose} 
+            aria-label="Close Analytics Modal"
+            className="p-2 text-stone-400 hover:text-stone-600 rounded-full hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          >
+            <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -67,72 +76,73 @@ const Overview: React.FC<OverviewProps> = ({
         <div className="overflow-y-auto p-4 no-scrollbar">
           <div className="grid grid-cols-2 gap-3 mb-6">
             <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
-              <p className="text-[9px] uppercase font-bold text-emerald-600 mb-0.5 tracking-wider">Days Active</p>
-              <p className="text-2xl font-bold text-emerald-800 leading-none">{activeDays}</p>
+              <p className="text-[9px] uppercase font-bold text-emerald-700 mb-0.5 tracking-wider">Days Active</p>
+              <p className="text-2xl font-bold text-emerald-900 leading-none">{activeDays}</p>
             </div>
-            <div className="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
-              <p className="text-[9px] uppercase font-bold text-indigo-600 mb-0.5 tracking-wider">Avg Score</p>
+            <div className="bg-amber-50 p-3 rounded-xl border border-amber-100">
+              <p className="text-[9px] uppercase font-bold text-amber-700 mb-0.5 tracking-wider">Avg Score</p>
               <div className="flex items-baseline leading-none">
-                <p className="text-2xl font-bold text-indigo-800">{avgScore}</p>
-                <span className="text-[10px] text-indigo-400 ml-1">/ 11</span>
+                <p className="text-2xl font-bold text-amber-900">{avgScore}</p>
+                <span className="text-[10px] text-amber-500 ml-1" aria-hidden="true">/ 11</span>
+                <span className="sr-only">out of 11</span>
               </div>
             </div>
           </div>
 
           {historyData.length > 0 ? (
-            <div className="mb-6 h-56 w-full">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Breakdown</p>
+            <div className="mb-6 h-56 w-full" aria-label="Daily activity breakdown chart" role="img">
+              <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-3" aria-hidden="true">Breakdown</p>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={historyData} barSize={14}>
                   <XAxis 
                     dataKey="dayNumber" 
-                    tick={{fontSize: 9, fill: '#94a3b8'}} 
+                    tick={{fontSize: 9, fill: '#78716c'}} 
                     tickFormatter={(val) => `${val}`}
                     axisLine={false}
                     tickLine={false}
                     dy={5}
                   />
                   <Tooltip 
-                    cursor={{fill: '#f8fafc'}}
-                    contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '10px'}}
+                    cursor={{fill: '#f5f5f4'}}
+                    contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '10px', backgroundColor: '#fff', color: '#444'}}
                   />
                   <Legend 
                     verticalAlign="top" 
                     height={30} 
                     iconType="circle"
-                    wrapperStyle={{ fontSize: '10px', fontWeight: 'bold' }}
+                    wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', color: '#57534e' }}
                   />
                   <Bar 
                     dataKey="prayerScore" 
                     name="Prayers" 
                     stackId="a" 
-                    fill="#10b981" 
+                    fill="#059669" 
                     radius={[0, 0, 2, 2]} 
                   />
                   <Bar 
                     dataKey="quranScore" 
                     name="Quran" 
                     stackId="a" 
-                    fill="#fbbf24" 
+                    fill="#f59e0b" 
                   />
                   <Bar 
                     dataKey="tarawihScore" 
                     name="Tarawih" 
                     stackId="a" 
-                    fill="#6366f1" 
+                    fill="#4f46e5" 
                     radius={[2, 2, 0, 0]} 
                   />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="text-center py-8 mb-6 bg-slate-50 rounded-xl border border-dashed border-slate-300">
-              <p className="text-slate-400 text-[11px] font-medium">No activity yet.</p>
+            <div className="text-center py-8 mb-6 bg-stone-50 rounded-xl border border-dashed border-stone-300">
+              <p className="text-stone-400 text-[11px] font-medium">No activity yet.</p>
             </div>
           )}
 
-          <div className="border-t border-slate-100 pt-5">
-            <h3 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3">Management</h3>
+          <div className="border-t border-stone-200 pt-5">
+            <h3 className="text-[9px] font-bold text-stone-400 uppercase tracking-widest mb-3" aria-hidden="true">Management</h3>
             <div className="space-y-2">
               <button 
                 onClick={() => {
@@ -141,7 +151,7 @@ const Overview: React.FC<OverviewProps> = ({
                     onClose();
                   }
                 }}
-                className="w-full py-2.5 px-4 rounded-lg border border-red-100 text-red-600 bg-white hover:bg-red-50 active:bg-red-100 transition-colors font-bold text-[11px] uppercase tracking-wider"
+                className="w-full py-2.5 px-4 rounded-lg border border-red-100 text-red-600 bg-white hover:bg-red-50 active:bg-red-100 transition-colors font-bold text-[11px] uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 Reset Selected Day
               </button>
@@ -152,7 +162,7 @@ const Overview: React.FC<OverviewProps> = ({
                     onClose();
                   }
                 }}
-                className="w-full py-2.5 px-4 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 active:bg-red-200 transition-colors font-bold text-[11px] uppercase tracking-wider"
+                className="w-full py-2.5 px-4 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 active:bg-red-200 transition-colors font-bold text-[11px] uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 Reset All Data
               </button>
